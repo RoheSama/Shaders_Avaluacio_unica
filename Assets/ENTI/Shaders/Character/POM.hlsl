@@ -9,7 +9,7 @@ void POM_float(
 {
     // Normalizar y escalar el vector de desplazamiento
     float2 uvDelta = (ViewDirTS.xy / max(ViewDirTS.z, 0.0001))
-        * (Amplitude * 0.001);
+        * (Amplitude * 0.005);
     float stepSize = 1.0 / Steps;
     float2 currentUV = UV;
     float  layerDepth = 0.0;
