@@ -33,7 +33,7 @@ Material:
   stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
-  m_LockedProperties: 
+  m_LockedProperties: _EdgeIntensity
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -105,23 +105,23 @@ Material:
     - _ClearCoatSmoothness: 0
     - _Cull: 2
     - _Cutoff: 0.5
-    - _DepthDetectionContrast: 2.65
+    - _DepthDetectionContrast: 2
     - _DepthDetectionDistance: 1
-    - _DepthDetectionInteriorIntensity: 1.06
+    - _DepthDetectionInteriorIntensity: 0.4
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
-    - _EdgeBorderOpacityContrast: 3.17
-    - _EdgeBorderOpacityIntensity: 0.15
-    - _EdgeCenterOpacityContrast: 3.77
-    - _EdgeIntensity: 2
+    - _EdgeBorderOpacityContrast: 5
+    - _EdgeBorderOpacityIntensity: 3.7
+    - _EdgeCenterOpacityContrast: 1.12
+    - _EdgeIntensity: 30
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _HexStrength: 8
-    - _InteriorIntensity: 0.03
+    - _HexStrength: 15
+    - _InteriorIntensity: 0.05
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
