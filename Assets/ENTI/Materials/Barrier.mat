@@ -112,7 +112,7 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
-    - _EdgeBorderOpacityContrast: 5
+    - _EdgeBorderOpacityContrast: 4.5
     - _EdgeBorderOpacityIntensity: 3.7
     - _EdgeCenterOpacityContrast: 1.12
     - _EdgeIntensity: 30
@@ -134,7 +134,7 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _TimeSpeed: 1
+    - _TimeSpeed: 0.5
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
