@@ -108,8 +108,8 @@ Material:
     m_Ints: []
     m_Floats:
     - _AddPrecomputedVelocity: 0
-    - _AffectContrast: 0.65
-    - _AffectIntensity: 0
+    - _AffectContrast: 0
+    - _AffectIntensity: 1
     - _AffectRadius: 1
     - _AlphaClip: 0
     - _AlphaToMask: 0
