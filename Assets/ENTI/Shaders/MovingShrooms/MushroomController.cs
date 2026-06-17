@@ -3,30 +3,24 @@
 public class MushroomController : MonoBehaviour
 {
     public Transform player;
-    public Renderer[] mushroomRenderers;
+    public MeshRenderer[] mushroomRenderers;
 
-    private static readonly int PlayerPositionID =
-        Shader.PropertyToID("_PlayerPosition");
+    private static readonly int PlayerPositionID = Shader.PropertyToID("_PlayerPosition");
 
-    // Cache del PropertyBlock para evitar GC alloc cada frame
-    private MaterialPropertyBlock _mpb;
-
-    private void Awake()
-    {
-        _mpb = new MaterialPropertyBlock();
-    }
-
-    private void Update()
+    void Update()
     {
         if (player == null) return;
 
         Vector3 playerPos = player.position;
 
-        foreach (Renderer rend in mushroomRenderers)
+        foreach (MeshRenderer rend in mushroomRenderers)
         {
-            rend.GetPropertyBlock(_mpb);
-            _mpb.SetVector(PlayerPositionID, playerPos);
-            rend.SetPropertyBlock(_mpb);
+            if (rend == null) continue;
+
+            foreach (Material mat in rend.materials)
+            {
+                mat.SetVector(PlayerPositionID, playerPos);
+            }
         }
     }
 }
