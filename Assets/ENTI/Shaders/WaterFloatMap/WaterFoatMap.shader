@@ -3,28 +3,25 @@ Shader "Custom/WaterFlowMap"
     Properties
     {
         [Header(Surface Inputs)]
-        _WaterColor("Water Color", Color) = (0.2, 1.0, 0.15, 1)
+        _WaterColor("Water Color", Color) = (0.45, 0.95, 1, 1)
         _Metallic("Metallic", Range(0, 1)) = 0
         _Smoothness("Smoothness", Range(0, 1)) = 0.9
-        _Tiling("Tiling", Vector) = (1.5, 1.5, 0, 0)
+        _Tiling("Tiling", Vector) = (1, 1, 0, 0)
 
-        _WaterTexture("Water Texture", 2D) = "white" {}
-
-        [Header(Flow)]
-        _FlowMap("Flow Map", 2D) = "gray" {}
+        _WaterTexture("WaterTexture", 2D) = "white" {}
 
         [Header(Normals)]
         _NormalMap("Normals", 2D) = "bump" {}
-        _Strength("Strength", Range(0, 1)) = 0.25
-        _Speed("Speed", Range(0, 5)) = 1
+        _Strength("Strength", Range(0, 1)) = 0.1
+        _Speed("Speed", Range(0, 5)) = 0.7
     }
 
         SubShader
         {
             Tags
             {
-                "RenderType" = "Opaque"
                 "RenderPipeline" = "UniversalPipeline"
+                "RenderType" = "Opaque"
                 "Queue" = "Geometry"
             }
 
@@ -51,9 +48,6 @@ Shader "Custom/WaterFlowMap"
                 TEXTURE2D(_WaterTexture);
                 SAMPLER(sampler_WaterTexture);
 
-                TEXTURE2D(_FlowMap);
-                SAMPLER(sampler_FlowMap);
-
                 TEXTURE2D(_NormalMap);
                 SAMPLER(sampler_NormalMap);
 
@@ -78,11 +72,9 @@ Shader "Custom/WaterFlowMap"
                 {
                     float4 positionCS : SV_POSITION;
                     float2 uv : TEXCOORD0;
-
                     float3 positionWS : TEXCOORD1;
                     float3 normalWS : TEXCOORD2;
                     float4 tangentWS : TEXCOORD3;
-
                     float fogCoord : TEXCOORD4;
                 };
 
@@ -90,71 +82,68 @@ Shader "Custom/WaterFlowMap"
                 {
                     Varyings output;
 
-                    VertexPositionInputs positionInputs = GetVertexPositionInputs(input.positionOS.xyz);
-                    VertexNormalInputs normalInputs = GetVertexNormalInputs(input.normalOS, input.tangentOS);
+                    VertexPositionInputs pos = GetVertexPositionInputs(input.positionOS.xyz);
+                    VertexNormalInputs norm = GetVertexNormalInputs(input.normalOS, input.tangentOS);
 
-                    output.positionCS = positionInputs.positionCS;
-                    output.positionWS = positionInputs.positionWS;
-
-                    output.normalWS = normalInputs.normalWS;
-                    output.tangentWS = float4(normalInputs.tangentWS, input.tangentOS.w);
+                    output.positionCS = pos.positionCS;
+                    output.positionWS = pos.positionWS;
+                    output.normalWS = norm.normalWS;
+                    output.tangentWS = float4(norm.tangentWS, input.tangentOS.w);
 
                     output.uv = input.uv * _Tiling.xy;
-
                     output.fogCoord = ComputeFogFactor(output.positionCS.z);
 
                     return output;
                 }
 
-                float2 FlowUV(float2 uv, float2 flowDirection, float timeOffset)
+                float2 FlowUV(float2 uv, float2 direction, float offset)
                 {
-                    float time = frac(_Time.y * _Speed + timeOffset);
-                    return uv - flowDirection * time * _Strength;
+                    float t = frac(_Time.y * _Speed + offset);
+                    return uv + direction * t * _Strength;
                 }
 
                 half4 frag(Varyings input) : SV_Target
                 {
                     float2 uv = input.uv;
 
-                    float2 flow = SAMPLE_TEXTURE2D(_FlowMap, sampler_FlowMap, uv).rg;
+                    float2 flowDirA = float2(1.0, 0.35);
+                    float2 flowDirB = float2(-0.45, 1.0);
 
-                    flow = flow * 2.0 - 1.0;
-
-                    float2 uvA = FlowUV(uv, flow, 0.0);
-                    float2 uvB = FlowUV(uv, flow, 0.5);
+                    float2 uvA = FlowUV(uv, flowDirA, 0.0);
+                    float2 uvB = FlowUV(uv, flowDirB, 0.5);
 
                     float blend = abs(frac(_Time.y * _Speed) * 2.0 - 1.0);
 
-                    float4 waterA = SAMPLE_TEXTURE2D(_WaterTexture, sampler_WaterTexture, uvA);
-                    float4 waterB = SAMPLE_TEXTURE2D(_WaterTexture, sampler_WaterTexture, uvB);
+                    float4 texA = SAMPLE_TEXTURE2D(_WaterTexture, sampler_WaterTexture, uvA);
+                    float4 texB = SAMPLE_TEXTURE2D(_WaterTexture, sampler_WaterTexture, uvB);
 
-                    float4 waterTexture = lerp(waterA, waterB, blend);
+                    float4 waterTex = lerp(texA, texB, blend);
 
                     float3 normalA = UnpackNormal(SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, uvA));
                     float3 normalB = UnpackNormal(SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, uvB));
 
                     float3 normalTS = normalize(lerp(normalA, normalB, blend));
 
+                    float3 tangentWS = normalize(input.tangentWS.xyz);
+                    float3 normalWSBase = normalize(input.normalWS);
+                    float3 bitangentWS = normalize(cross(normalWSBase, tangentWS) * input.tangentWS.w);
+
                     float3 normalWS = TransformTangentToWorld(
                         normalTS,
-                        half3x3(
-                            normalize(input.tangentWS.xyz),
-                            normalize(cross(input.normalWS, input.tangentWS.xyz) * input.tangentWS.w),
-                            normalize(input.normalWS)
-                        )
+                        half3x3(tangentWS, bitangentWS, normalWSBase)
                     );
 
                     normalWS = normalize(normalWS);
 
                     SurfaceData surfaceData;
-                    surfaceData.albedo = waterTexture.rgb * _WaterColor.rgb;
-                    surfaceData.alpha = 1.0;
+                    surfaceData.albedo = waterTex.rgb * _WaterColor.rgb;
+                    surfaceData.alpha = 1;
                     surfaceData.metallic = _Metallic;
                     surfaceData.specular = 0;
                     surfaceData.smoothness = _Smoothness;
                     surfaceData.normalTS = normalTS;
                     surfaceData.emission = 0;
-                    surfaceData.occlusion = 1.0;
+                    surfaceData.occlusion = 1;
                     surfaceData.clearCoatMask = 0;
                     surfaceData.clearCoatSmoothness = 0;
 
@@ -170,7 +159,6 @@ Shader "Custom/WaterFlowMap"
                     inputData.shadowMask = half4(1, 1, 1, 1);
 
                     half4 color = UniversalFragmentPBR(inputData, surfaceData);
-
                     color.rgb = MixFog(color.rgb, input.fogCoord);
 
                     return color;
