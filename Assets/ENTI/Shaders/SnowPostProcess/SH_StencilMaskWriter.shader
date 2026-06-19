@@ -15,13 +15,13 @@ Shader "Custom/StencilMaskWriter"
 
             Stencil
             {
-               Ref 1
-               Comp NotEqual
-               Pass Keep
+                Ref 1
+                Comp Always
+                Pass Replace
             }
 
             ColorMask 0
-            ZWrite On
+            ZWrite Off
             ZTest LEqual
 
             HLSLPROGRAM
