@@ -6,7 +6,7 @@ Shader "Custom/StencilMaskWriter"
         {
             "RenderPipeline" = "UniversalPipeline"
             "RenderType" = "Opaque"
-            "Queue" = "Geometry-10"
+            "Queue" = "Geometry+10"
         }
 
         Pass
@@ -15,13 +15,13 @@ Shader "Custom/StencilMaskWriter"
 
             Stencil
             {
-                Ref 1
-                Comp Always
-                Pass Replace
+               Ref 1
+               Comp NotEqual
+               Pass Keep
             }
 
             ColorMask 0
-            ZWrite Off
+            ZWrite On
             ZTest LEqual
 
             HLSLPROGRAM
