@@ -1181,7 +1181,7 @@
     "m_ObjectId": "01af5dd6a9234b03a9d791ec035c8c8f",
     "m_Title": "Metallic Value",
     "m_Position": {
-        "x": -2345.60009765625,
+        "x": -2345.599853515625,
         "y": 1161.599853515625
     }
 }
@@ -2304,7 +2304,7 @@
     "m_CustomColors": {
         "m_SerializableColors": []
     },
-    "m_TextureType": 0,
+    "m_TextureType": 1,
     "m_NormalMapSpace": 0,
     "m_EnableGlobalMipBias": true,
     "m_MipSamplingMode": 0
@@ -2404,8 +2404,8 @@
     "m_ObjectId": "2db65665e3c143dc93573767bdf40224",
     "m_Title": "lava POM",
     "m_Position": {
-        "x": -3465.600341796875,
-        "y": -498.3999938964844
+        "x": -3465.599853515625,
+        "y": -498.39990234375
     }
 }
 
@@ -3710,7 +3710,7 @@
     "m_ObjectId": "5c94394b21904171aa7acb9f1c099d63",
     "m_Title": "Mask Green",
     "m_Position": {
-        "x": -2324.000244140625,
+        "x": -2324.0,
         "y": 543.2000732421875
     }
 }
@@ -5712,7 +5712,7 @@
     "m_ObjectId": "aa88c55be2514860a2001489a8499e39",
     "m_Title": "Albedo With Triplanar",
     "m_Position": {
-        "x": -2565.60009765625,
+        "x": -2565.599853515625,
         "y": -1359.199951171875
     }
 }
@@ -7294,7 +7294,7 @@
     "m_ObjectId": "f1768d63f84641ee96bfcd531ac64323",
     "m_Title": "Normal Map",
     "m_Position": {
-        "x": -1633.60009765625,
+        "x": -1633.599853515625,
         "y": -1987.199951171875
     }
 }
