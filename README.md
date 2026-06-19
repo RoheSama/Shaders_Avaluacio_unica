@@ -28,7 +28,8 @@ NOTA: Per activar la barrera, polsar Q, està 10 segons activada i es desactiva 
 ### Displacing Snow
 
 ### Snow Post Process with Stencil
-NOTA: El stencil està activat, i he comprovat que els objectes de les barreres esquerra, dreta i la casa del fons
+NOTA: El cuadrat de la casa de l'esquerra és el collider que activa la neu per post-processat. 
+El stencil està activat, i he comprovat que els objectes de les barreres esquerra, dreta i la casa del fons
 queden correctament marcats, però no he trobat la manera d'aplicar el stencil override al fullscreen shader graph 
 del renderer. La configuració del stencil està present a l'escena. 
 
